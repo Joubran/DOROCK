@@ -117,7 +117,7 @@ class Game:
         self.tilemap = Tilemap(self, tile_size=16)
         self.ground_offset = 2
 
-        self.level = 5
+        self.level = 0
         
         #try:
         #   self.load_level_save('level.json')
@@ -300,10 +300,10 @@ class Game:
                         self.player.dash()
                     if event.key == pygame.K_f:
                         width, height = self.screen.get_size()
-                        if width == 640:
+                        if width == 1280:
                             self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
                         else:
-                            self.screen = pygame.display.set_mode((640,500))
+                            self.screen = pygame.display.set_mode((1280,720))
                     if event.key == pygame.K_r:
                         self.load_level(self.level)
                     if event.key == pygame.K_n:
@@ -393,10 +393,10 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_f:
                         width, height = self.screen.get_size()
-                        if width == 640:
+                        if width == 1280:
                             self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
                         else:
-                            self.screen = pygame.display.set_mode((640,500))
+                            self.screen = pygame.display.set_mode((1280,720))
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     vid.close()
                     self.display = pygame.Surface((self.WINDOW_WIDTH, self.WINDOW_HEIGHT), pygame.SRCALPHA)
