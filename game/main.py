@@ -77,7 +77,7 @@ def main_menu(fresh_start):
     turn_on_first_time = fresh_start
     increasing = True
     alpha = 0
-    circles = 0
+    circles = 2
 
     start_hovered = False
     settings_hovered = False
