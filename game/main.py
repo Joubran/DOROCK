@@ -13,6 +13,8 @@ import game
 
 pygame.init()
 
+pygame.mixer.music.load('Sounds/test_music.mp3')
+
 #screen
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
@@ -106,8 +108,8 @@ def main_menu(fresh_start):
     exit_button_bright = button.Button(465, 410, exit_img_bright, 0.15)
 
     #music
-    pygame.mixer.music.load('Sounds/test_music.mp3')
-    pygame.mixer.music.play(loops=-1, fade_ms=5000)
+    if not pygame.mixer.music.get_busy():
+        pygame.mixer.music.play(loops=-1, fade_ms=5000)
     pygame.mixer.music.set_volume(0.05)
     pygame.mixer.music.pause()
     vol = int(pygame.mixer.music.get_volume() * 1000)
