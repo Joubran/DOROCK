@@ -5,6 +5,7 @@ import random
 
 import json
 import pygame
+import time
 
 from scripts.utils import load_image, load_images, Animation
 from scripts.entities import PhysicsEntity, Player, Enemy, Boss
@@ -109,13 +110,14 @@ class Game:
         self.clouds = Clouds(self.assets['clouds'], count=16)
 
         self.player = Player(self, (50, 50), (8, 15))
+        self.last_dmg_call = 0
     
         self.boss = Boss(self, (0,0), (96,96))
 
         self.tilemap = Tilemap(self, tile_size=16)
         self.ground_offset = 2
 
-        self.level = 0
+        self.level = 5
         
         #try:
         #   self.load_level_save('level.json')
@@ -343,6 +345,9 @@ class Game:
         self.display.blit(text, text_rect)
 
     def take_damage(self, damage):
+        if time.time() - self.last_dmg_call < 2:
+            return 
+
         self.player.health -= damage
 
         self.sfx['hit'].play()
@@ -357,6 +362,7 @@ class Game:
                 return
             self.dead += 1
             self.player.health = self.player.max_health
+        self.last_dmg_call = time.time()
 
     def PlayVid(self, vid_name):
         self.display = pygame.Surface((720, 480), pygame.SRCALPHA)
