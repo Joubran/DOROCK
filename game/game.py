@@ -99,6 +99,7 @@ class Game:
             'hit': pygame.mixer.Sound('data/sfx/hit.wav'),
             'shoot': pygame.mixer.Sound('data/sfx/shoot.wav'),
             'ambience': pygame.mixer.Sound('data/sfx/ambience.wav'),
+            'explosion': pygame.mixer.Sound('data/sfx/explosion.wav')
         }   
 
         self.sfx['ambience'].set_volume(0)
@@ -106,7 +107,8 @@ class Game:
         self.sfx['hit'].set_volume(0.8)
         self.sfx['dash'].set_volume(0.3)
         self.sfx['jump'].set_volume(0.7)
-        
+        self.sfx['explosion'].set_volume(0.8)
+
         self.clouds = Clouds(self.assets['clouds'], count=16)
 
         self.player = Player(self, (50, 50), (8, 15))
@@ -117,7 +119,7 @@ class Game:
         self.tilemap = Tilemap(self, tile_size=16)
         self.ground_offset = 2
 
-        self.level = 5
+        self.level = 0
         self.max_enemies = 1
         
         #try:
@@ -203,11 +205,13 @@ class Game:
             self.screenshake = max(0, self.screenshake - 1)
 
             if len(self.enemies) <= (self.max_enemies / 4) * 3:
+                self.sfx['explosion'].play()
+                self.max_enemies = -1
                 for portal in self.tilemap.extract([('portal_block', 0)]):
                     pass
 
             if self.level < 5:
-                if self.player.rect().colliderect(self.door_rec) and len(self.enemies) <= (self.max_enemies / 4) * 3:
+                if self.player.rect().colliderect(self.door_rec):
                     self.next_level = True
 
             if self.next_level:
