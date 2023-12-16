@@ -117,7 +117,8 @@ class Game:
         self.tilemap = Tilemap(self, tile_size=16)
         self.ground_offset = 2
 
-        self.level = 0
+        self.level = 5
+        self.max_enemies = 1
         
         #try:
         #   self.load_level_save('level.json')
@@ -139,7 +140,7 @@ class Game:
         if self.current_music != self.level:
             pygame.mixer.music.load('data/music/' + str(self.level) + '.mp3')
             pygame.mixer.music.set_volume(1)
-            pygame.mixer.music.play(-1)
+            #pygame.mixer.music.play(-1)
             self.current_music = self.level
 
         self.tilemap.load('data/maps/' + str(map_id) + '.json')
@@ -178,30 +179,35 @@ class Game:
         self.next_level = False
         self.last_txt_call = 0
         self.player.health = self.player.max_health
+        self.max_enemies = len(self.enemies)
         
     def run(self):        
         self.sfx['ambience'].play(-1)
         
-        self.PlayVid('data/cutscenes/Intro.mp4')
+        if self.level == 0:
+            self.PlayVid('data/cutscenes/Intro.mp4')
+        else:
+            self.running = True
 
         while True:
             if not self.running:
                 continue
 
             if not pygame.mixer.music.get_busy():
-                pygame.mixer.music.play()
+                pass
+                #pygame.mixer.music.play()
 
             self.display.fill((0, 0, 0, 0))
             self.display_2.blit(self.assets['background' + str(self.level)], (0, 0))
             
             self.screenshake = max(0, self.screenshake - 1)
 
-            if not self.enemies:
+            if len(self.enemies) <= (self.max_enemies / 4) * 3:
                 for portal in self.tilemap.extract([('portal_block', 0)]):
                     pass
 
             if self.level < 5:
-                if self.player.rect().colliderect(self.door_rec) and not self.enemies:
+                if self.player.rect().colliderect(self.door_rec) and len(self.enemies) <= (self.max_enemies / 4) * 3:
                     self.next_level = True
 
             if self.next_level:

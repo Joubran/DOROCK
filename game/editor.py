@@ -5,7 +5,7 @@ import pygame
 from scripts.utils import load_images
 from scripts.tilemap import Tilemap
 
-RENDER_SCALE = 2.0
+RENDER_SCALE = 4.0
 
 class Editor:
     def __init__(self):
