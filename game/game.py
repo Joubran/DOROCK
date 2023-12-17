@@ -19,9 +19,12 @@ from scripts.pyvidplayer import Video
 LEVEL_TEXTS = ["Anastasia's Heavens", "Baldan's Mountains", "Timur's City", "Sofie's Cave", "Joubran's Hell", "THE DOROCK DUNGEON"]
 
 class Game:
-    def __init__(self):
+    def __init__(self, menu):
         pygame.init()
         pygame.display.set_caption('DOROCK')
+
+        self.menu = menu
+
         self.WINDOW_WIDTH = 320
         self.WINDOW_HEIGHT = 240
         self.screen = pygame.display.set_mode((1280,720))
@@ -119,7 +122,7 @@ class Game:
         self.tilemap = Tilemap(self, tile_size=16)
         self.ground_offset = 2
 
-        self.level = 0
+        self.level = 5
         self.max_enemies = 1
         
         #try:
@@ -374,7 +377,7 @@ class Game:
             self.player.health = self.player.max_health
         self.last_dmg_call = time.time()
 
-    def PlayVid(self, vid_name):
+    def PlayVid(self, vid_name, quit=False):
         self.display = pygame.Surface((720, 480), pygame.SRCALPHA)
         self.display_2 = pygame.Surface((720, 480))
 
@@ -394,6 +397,9 @@ class Game:
                 self.display = pygame.Surface((self.WINDOW_WIDTH, self.WINDOW_HEIGHT), pygame.SRCALPHA)
                 self.display_2 = pygame.Surface((self.WINDOW_WIDTH, self.WINDOW_HEIGHT))
                 self.running = True
+                if quit:
+                    pygame.quit()
+                    sys.exit()
                 return
 
             for event in pygame.event.get():

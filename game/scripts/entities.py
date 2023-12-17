@@ -130,7 +130,6 @@ class Enemy(PhysicsEntity):
     def render(self, surf, offset=(0, 0)):
         super().render(surf, offset=offset)
         
-
 class Player(PhysicsEntity):
     def __init__(self, game, pos, size):
         super().__init__(game, 'player', pos, size)
@@ -142,7 +141,7 @@ class Player(PhysicsEntity):
         self.health = self.max_health
     
     def update(self, tilemap, movement=(0, 0)):
-        super().update(tilemap, movement=(movement[0] * 2, movement[1] * 2))
+        super().update(tilemap, movement=(movement[0] * 1.5, movement[1] * 2))
 
         self.air_time += 1
         
@@ -237,7 +236,7 @@ class Boss(PhysicsEntity):
     def __init__(self, game, pos, size):
         super().__init__(game, 'boss', pos, size)
         self.max_health = 12
-        self.health = self.max_health
+        self.health = 1
         self.vulnerable = True
         self.left_pos = [243.5, 20]
         self.right_pos = [-96,20]
@@ -309,7 +308,7 @@ class Boss(PhysicsEntity):
 
             self.attack2(self.offset_x)
 
-        else:
+        elif self.health > 0:
             self.game.ground_offset = 2
             if time.time() - self.last_call > 2:
                 self.last_call = time.time()
@@ -321,7 +320,8 @@ class Boss(PhysicsEntity):
                 self.num_attacks += 1
             self.attack3(self.ignore)
 
-        if self.health == 0:
+        else:
+            self.game.PlayVid('data/cutscenes/win.mp4',True)
             return True
 
     def render(self, surf, offset=(0, 0)):
