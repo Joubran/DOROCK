@@ -1,9 +1,6 @@
 import sys
-import os
-import math
 import random
 
-import json
 import pygame
 
 from scripts import button
@@ -14,7 +11,7 @@ import game
 class Menu:
     def __init__(self):
         pygame.init()
-        pygame.mixer.music.load('Sounds/test_music.mp3')
+        pygame.mixer.music.load('Sounds/menu_music.mp3')
 
         #screen
         SCREEN_WIDTH = 1280
@@ -283,7 +280,9 @@ class Menu:
                             running = False
 
                 if audio_button.draw(screen, 'hover'):
-                    audio_button_bright.draw(screen)
+                    if audio_button_bright.draw(screen):
+                        running = False
+                        audio_menu()
                     if not audio_hovered:
                         pygame.mixer.Sound.play(sound_hover)
                         audio_hovered = True
@@ -315,6 +314,24 @@ class Menu:
 
                 pygame.display.update()
                 clock.tick(FPS)
+
+        # def audio_menu():
+        #
+        #     settings_bg = pygame.image.load('Images/settings_bg.png').convert_alpha()
+        #     settings_bg = pygame.transform.scale(settings_bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        #
+        #     running = True
+        #     while running:
+        #         screen.fill(BLACK_COLOR)
+        #         screen.blit(settings_bg, (0, 0))
+        #         for event in pygame.event.get():
+        #             if event.type == pygame.QUIT:
+        #                 running = False
+        #                 pygame.quit()
+        #                 sys.exit()
+        #             elif event.type == pygame.KEYDOWN:
+        #                 if event.key == pygame.K_ESCAPE:
+        #                     running = False
 
 
         main_menu(self,False)
