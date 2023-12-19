@@ -69,7 +69,7 @@ class Menu:
 
             return increasing, alpha, circles
 
-        def main_menu(self, fresh_start):
+        def main_menu(self, fresh_start, started_time = pygame.time.get_ticks()):
             running = True
 
             # game variables
@@ -158,8 +158,9 @@ class Menu:
                         increasing, alpha, circles = draw_fade_text("Dorock", PIXEL_50, (179, 0, 0), 640, 360, 100, increasing, alpha,circles)
                     else:
                         screen.blit(bg_img, (0, 0))
+                        current_time = pygame.time.get_ticks()
                         if start_button.draw(screen, 'hover'):
-                            if start_button_bright.draw(screen):
+                            if start_button_bright.draw(screen) and current_time - started_time > 600:
                                 game.Game(self).run()
                                 running = False
                             if not start_hovered:
@@ -170,9 +171,9 @@ class Menu:
                             start_hovered = False
 
                         if settings_button.draw(screen, 'hover'):
-                            if settings_button_bright.draw(screen):
+                            if settings_button_bright.draw(screen) and current_time - started_time > 600:
                                 running = False
-                                settings_menu()
+                                settings_menu(current_time)
                             if not settings_hovered:
                                 pygame.mixer.Sound.play(sound_hover)
                                 settings_hovered = True
@@ -181,7 +182,7 @@ class Menu:
                             settings_hovered = False
 
                         if exit_button.draw(screen, 'hover'):
-                            if exit_button_bright.draw(screen):
+                            if exit_button_bright.draw(screen) and current_time - started_time > 600:
                                 running=False
                             if not exit_hovered:
                                 sound_hover.play(0, 0, fade_ms=0)
@@ -216,7 +217,7 @@ class Menu:
                         test_slider.draw(screen, vol)
 
                         #update animation
-                        current_time = pygame.time.get_ticks()
+
                         if current_time - last_update >= animation_cd:
                             if frame == animations-1:
                                 frame = 0
@@ -241,7 +242,7 @@ class Menu:
 
                 clock.tick(FPS)
 
-        def settings_menu():
+        def settings_menu(started_time):
             # image stuff for settings menu
             settings_bg = pygame.image.load('Images/settings_bg.png').convert_alpha()
             settings_bg = pygame.transform.scale(settings_bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -270,6 +271,7 @@ class Menu:
             while running:
                 screen.fill(BLACK_COLOR)
                 screen.blit(settings_bg, (0, 0))
+                current_time = pygame.time.get_ticks()
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         running = False
@@ -278,9 +280,10 @@ class Menu:
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_ESCAPE:
                             running = False
+                            main_menu(self, True, current_time)
 
                 if audio_button.draw(screen, 'hover'):
-                    if audio_button_bright.draw(screen):
+                    if audio_button_bright.draw(screen) and current_time - started_time > 600:
                         running = False
                         audio_menu()
                     if not audio_hovered:
@@ -291,7 +294,8 @@ class Menu:
                     audio_hovered = False
 
                 if video_button.draw(screen, 'hover'):
-                    video_button_bright.draw(screen)
+                    if video_button_bright.draw(screen) and current_time - started_time > 600:
+                        running = False
                     if not video_hovered:
                         pygame.mixer.Sound.play(sound_hover)
                         video_hovered = True
@@ -300,9 +304,9 @@ class Menu:
                     video_hovered = False
 
                 if back_button.draw(screen, 'hover'):
-                    if back_button_bright.draw(screen):
+                    if back_button_bright.draw(screen) and current_time - started_time > 600:
                         running = False
-                        main_menu(self,True)
+                        main_menu(self,True, current_time)
                     if not back_hovered:
                         pygame.mixer.Sound.play(sound_hover)
                         back_hovered = True
@@ -315,23 +319,24 @@ class Menu:
                 pygame.display.update()
                 clock.tick(FPS)
 
-        # def audio_menu():
-        #
-        #     settings_bg = pygame.image.load('Images/settings_bg.png').convert_alpha()
-        #     settings_bg = pygame.transform.scale(settings_bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
-        #
-        #     running = True
-        #     while running:
-        #         screen.fill(BLACK_COLOR)
-        #         screen.blit(settings_bg, (0, 0))
-        #         for event in pygame.event.get():
-        #             if event.type == pygame.QUIT:
-        #                 running = False
-        #                 pygame.quit()
-        #                 sys.exit()
-        #             elif event.type == pygame.KEYDOWN:
-        #                 if event.key == pygame.K_ESCAPE:
-        #                     running = False
+        def audio_menu():
+
+            settings_bg = pygame.image.load('Images/settings_bg.png').convert_alpha()
+            settings_bg = pygame.transform.scale(settings_bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
+
+            running = True
+            while running:
+                screen.fill(BLACK_COLOR)
+                screen.blit(settings_bg, (0, 0))
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        running = False
+                        pygame.quit()
+                        sys.exit()
+                    elif event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            running = False
+                            settings_menu()
 
 
         main_menu(self,False)
