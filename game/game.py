@@ -19,7 +19,7 @@ from scripts.pyvidplayer import Video
 LEVEL_TEXTS = ["Anastasia's Heavens", "Baldan's Mountains", "Timur's City", "Sofie's Cave", "Joubran's Hell", "THE DOROCK DUNGEON"]
 
 class Game:
-    def __init__(self, menu):
+    def __init__(self, menu, svol, vol):
         pygame.init()
         pygame.display.set_caption('DOROCK')
 
@@ -105,12 +105,20 @@ class Game:
             'explosion': pygame.mixer.Sound('data/sfx/explosion.wav')
         }   
 
-        self.sfx['ambience'].set_volume(0)
-        self.sfx['shoot'].set_volume(0.4)
-        self.sfx['hit'].set_volume(0.8)
-        self.sfx['dash'].set_volume(0.3)
-        self.sfx['jump'].set_volume(0.7)
-        self.sfx['explosion'].set_volume(0.8)
+        if svol == 1:
+            self.sfx['ambience'].set_volume(0)
+            self.sfx['shoot'].set_volume(0.4)
+            self.sfx['hit'].set_volume(0.8)
+            self.sfx['dash'].set_volume(0.3)
+            self.sfx['jump'].set_volume(0.7)
+            self.sfx['explosion'].set_volume(0.8)
+        else:
+            self.sfx['ambience'].set_volume(0)
+            self.sfx['shoot'].set_volume(0)
+            self.sfx['hit'].set_volume(0)
+            self.sfx['dash'].set_volume(0)
+            self.sfx['jump'].set_volume(0)
+            self.sfx['explosion'].set_volume(0)
 
         self.clouds = Clouds(self.assets['clouds'], count=16)
 

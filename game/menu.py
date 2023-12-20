@@ -151,7 +151,8 @@ class Menu:
                         current_time = pygame.time.get_ticks()
                         if start_button.draw(screen, 'hover'):
                             if start_button_bright.draw(screen) and current_time - started_time > 600:
-                                game.Game(self).run()
+                                svol = 1 if (sound_hover.get_volume()>0) else 0
+                                game.Game(self, svol, vol).run()
                                 running = False
                             if not start_hovered:
                                 pygame.mixer.Sound.play(sound_hover)
