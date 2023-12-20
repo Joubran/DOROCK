@@ -107,20 +107,12 @@ class Game:
 
         self.volume = vol
 
-        if svol == 1:
-            self.sfx['ambience'].set_volume(0)
-            self.sfx['shoot'].set_volume(0.4)
-            self.sfx['hit'].set_volume(0.8)
-            self.sfx['dash'].set_volume(0.3)
-            self.sfx['jump'].set_volume(0.7)
-            self.sfx['explosion'].set_volume(0.8)
-        else:
-            self.sfx['ambience'].set_volume(0)
-            self.sfx['shoot'].set_volume(0)
-            self.sfx['hit'].set_volume(0)
-            self.sfx['dash'].set_volume(0)
-            self.sfx['jump'].set_volume(0)
-            self.sfx['explosion'].set_volume(0)
+        self.sfx['ambience'].set_volume(0*svol)
+        self.sfx['shoot'].set_volume(0*svol)
+        self.sfx['hit'].set_volume(0*svol)
+        self.sfx['dash'].set_volume(0*svol)
+        self.sfx['jump'].set_volume(0*svol)
+        self.sfx['explosion'].set_volume(0*svol)
 
         self.clouds = Clouds(self.assets['clouds'], count=16)
 
