@@ -384,7 +384,7 @@ class Menu:
 
                 screen.blit(bg_slider, (729, 257))
                 screen.blit(sounds_slider, (727, 362))
-                
+
                 pygame.display.update()
                 clock.tick(fps)
 
