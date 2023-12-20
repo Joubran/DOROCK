@@ -23,8 +23,6 @@ class Menu:
         clock = pygame.time.Clock()
         FPS = 60
 
-        #SLIDER
-        test_slider = slider.Slider(1150, 665, 100, 5, screen)
 
         #define fonts
         PIXEL_50 = pygame.font.Font('Fonts/pixel.ttf', 50)
@@ -39,7 +37,7 @@ class Menu:
             pygame.mixer.music.play(loops=-1, fade_ms=5000)
         pygame.mixer.music.set_volume(0.5)
         pygame.mixer.music.pause()
-        vol = int(pygame.mixer.music.get_volume() * 1000)
+        vol = int(pygame.mixer.music.get_volume())
         prevol = vol
         turn_on_first_time = False
 
@@ -292,25 +290,23 @@ class Menu:
         def audio_menu(started_time, vol, prevol):
 
             #images
-            audio_bg_img = pygame.image.load('Images/audio_bg.png').convert_alpha()
+            audio_bg_img = pygame.image.load('Images/AudioMenu/audio_bg.png').convert_alpha()
             audio_bg = pygame.transform.scale(audio_bg_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
-            sound_on_img = pygame.image.load('Images/sound_on.png').convert_alpha()
-            sound_off_img = pygame.image.load('Images/sound_off.png').convert_alpha()
-            on_img = pygame.image.load('Images/AudioMenu/on.png').convert_alpha()
-            on_img_bright = pygame.image.load('Images/AudioMenu/on_bright.png').convert_alpha()
-            off_img = pygame.image.load('Images/AudioMenu/off.png').convert_alpha()
-            off_img_bright = pygame.image.load('Images/AudioMenu/off_bright.png').convert_alpha()
 
-            # making them buttons
-            sound_button = button.Button(1100, 650, sound_on_img, 0.14)
-            sound_off_button = button.Button(1100, 650, sound_off_img, 0.14)
-            on_button = button.Button(300, 400, on_img, 0.15)
-            on_button_bright = button.Button(300, 400, on_img_bright, 0.15)
-            off_button = button.Button(300, 400, off_img, 0.15)
-            off_button_bright = button.Button(300, 400, off_img_bright, 0.15)
+            music_off_img = pygame.image.load('Images/AudioMenu/music_off.png').convert_alpha()
+            music_on_img = pygame.image.load('Images/AudioMenu/music_on.png').convert_alpha()
+            bg_slider = pygame.image.load('Images/AudioMenu/bg_sliderg.png').convert_alpha()
+            bg_slider = pygame.transform.scale(bg_slider, (bg_slider.get_width()*0.4654, bg_slider.get_height()*0.4657))
 
-            on_hovered = False
-            off_hovered = False
+            #buttons
+            music_on = button.Button(227, 245, music_on_img)
+            music_off = button.Button(227, 245, music_off_img)
+
+            music_hovered = False
+            sounds_hovered = False
+
+            # SLIDER
+            test_slider = slider.Slider(768, 283, 253, 2, screen, vol)
 
 
             vol = int(pygame.mixer.music.get_volume() * 1000)
@@ -336,31 +332,18 @@ class Menu:
                             prevol = vol
                             vol = test_slider.get_volume()
                             pygame.mixer.music.set_volume(vol / 100)
+
+                if music_off.draw(screen, 'hover'):
+                    music_on.draw(screen)
+                    if not music_hovered:
+                        pygame.mixer.Sound.play(sound_hover)
+                        music_hovered = True
+                else:
+                    music_off.draw(screen)
+                    music_hovered = False
                 test_slider.draw(screen, vol)
 
-                if vol == 0:
-                    if off_button.draw(screen, 'hover'):
-                        if off_button_bright.draw(screen):
-                            pygame.mixer.music.set_volume(prevol)
-                            vol = prevol
-                        if not off_hovered:
-                            pygame.mixer.Sound.play(sound_hover)
-                            off_hovered = True
-                    else:
-                        off_button.draw(screen)
-                        off_hovered = False
-                else:
-                    if on_button.draw(screen, 'hover'):
-                        if on_button_bright.draw(screen):
-                            prevol = pygame.mixer.music.get_volume()
-                            pygame.mixer.music.set_volume(0)
-                            vol = 0
-                        if not on_hovered:
-                            pygame.mixer.Sound.play(sound_hover)
-                            on_hovered = True
-                    else:
-                        on_button.draw(screen)
-                        on_hovered = True
+                screen.blit(bg_slider, (729, 257))
 
                 pygame.display.update()
                 clock.tick(FPS)

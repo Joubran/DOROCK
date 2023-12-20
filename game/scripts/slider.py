@@ -1,18 +1,18 @@
 import pygame as pg
 
 class Slider:
-    def __init__(self, x, y, w, h, screen):
+    def __init__(self, x, y, w, h, screen, vol):
         self.circle_x = x
-        self.volume = 100
+        self.volume = vol
         self.sliderRect = pg.Rect(x, y, w, h)
         self.clicked = False
-        self.circle = pg.draw.circle(screen, (0, 10, 0), (self.circle_x, (self.sliderRect.h / 2 + self.sliderRect.y)), self.sliderRect.h * 1.5)
+        self.circle = pg.draw.circle(screen, (0, 70, 17), (self.circle_x, (self.sliderRect.h / 2 + self.sliderRect.y)), self.sliderRect.h * 3)
     def draw(self, screen, vol=1):
-        pg.draw.rect(screen, (250, 250, 250), self.sliderRect)
+        pg.draw.rect(screen, (0, 86, 17), self.sliderRect)
         if vol == 0:
-            pg.draw.circle(screen, (250, 240, 250), (self.sliderRect.x,  self.sliderRect.y + self.sliderRect.h/2), self.sliderRect.h * 1.5)
+            pg.draw.circle(screen, (0, 70, 17), (self.sliderRect.x,  self.sliderRect.y + self.sliderRect.h/2), self.sliderRect.h * 3)
         else:
-            pg.draw.circle(screen, (250, 240, 250), (self.circle_x, (self.sliderRect.h / 2 + self.sliderRect.y)), self.sliderRect.h * 1.5)
+            pg.draw.circle(screen, (0, 70, 17), (self.circle_x, (self.sliderRect.h / 2 + self.sliderRect.y)), self.sliderRect.h * 3)
 
     def get_volume(self):
         return self.volume
