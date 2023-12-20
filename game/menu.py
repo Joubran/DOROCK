@@ -1,51 +1,48 @@
-import sys
 import random
+import sys
 
 import pygame
 
+import game
 from scripts import button
 from scripts import slider
 from scripts import sprite_sheet as ss
-import game
+
 
 class Menu:
     def __init__(self):
         pygame.init()
         pygame.mixer.music.load('Sounds/menu_music.mp3')
 
-        #screen
-        SCREEN_WIDTH = 1280
-        SCREEN_HEIGHT = 720
-        screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        # screen
+        screen_width = 1280
+        screen_height = 720
+        screen = pygame.display.set_mode((screen_width, screen_height))
         pygame.display.set_caption('Dorock')
 
-        #FPS
+        # FPS
         clock = pygame.time.Clock()
-        FPS = 60
+        fps = 60
 
+        # define fonts
+        pixel_50 = pygame.font.Font('Fonts/pixel.ttf', 50)
 
-        #define fonts
-        PIXEL_50 = pygame.font.Font('Fonts/pixel.ttf', 50)
+        # define color
+        white_color = (255, 255, 255)
+        black_color = (0, 0, 0)
 
-        #define color
-        WHITE_COLOR = (255, 255, 255)
-        BLACK_COLOR = (0, 0, 0)
-
-        #music
+        # music
         pygame.mixer.init()
         if not pygame.mixer.music.get_busy():
             pygame.mixer.music.play(loops=-1, fade_ms=5000)
         pygame.mixer.music.set_volume(0.5)
         pygame.mixer.music.pause()
-        vol = int(pygame.mixer.music.get_volume())
-        prevol = vol
-        turn_on_first_time = False
 
         # sounds
         sound_hover = pygame.mixer.Sound('Sounds/hover_button_sound.ogg')
         sound_hover.set_volume(0.15)
 
-        def draw_fade_text(text, font, text_color, x, y, fade_speed=1, increasing = True, alpha = 0, circles = 0):
+        def draw_fade_text(text, font, text_color, x, y, fade_speed=1, increasing=True, alpha=0, circles=0):
             if increasing:
                 alpha += fade_speed
                 if alpha >= 255:
@@ -70,7 +67,7 @@ class Menu:
 
             return increasing, alpha, circles
 
-        def main_menu(self, fresh_start, started_time = pygame.time.get_ticks(), turn_on_first_time = True, vol=0.5):
+        def main_menu(fresh_start, started_time=pygame.time.get_ticks(), turn_on_first_time=True, vol=0.5):
             running = True
 
             # game variables
@@ -85,7 +82,7 @@ class Menu:
 
             # loading images for menu
             bg_img = pygame.image.load('Images/bg_menu.jpg').convert_alpha()
-            bg_img = pygame.transform.scale(bg_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
+            bg_img = pygame.transform.scale(bg_img, (screen_width, screen_height))
             start_img = pygame.image.load('Images/sign_play.png').convert_alpha()
             start_img_bright = pygame.image.load('Images/sign_play_bright.png').convert_alpha()
             settings_img = pygame.image.load('Images/sign_settings.png').convert_alpha()
@@ -100,7 +97,6 @@ class Menu:
             settings_button_bright = button.Button(465, 230, settings_img_bright, 0.15)
             exit_button = button.Button(465, 410, exit_img, 0.15)
             exit_button_bright = button.Button(465, 410, exit_img_bright, 0.15)
-
 
             # birds
             bird_sheet_image = pygame.image.load('Images/bird_sprites.png').convert_alpha()
@@ -122,13 +118,13 @@ class Menu:
             frame = 0
 
             for frame in range(animations):
-                bird_list.append(bird_sprites.get_image(frame, bird_width, bird_height, bird_scale, BLACK_COLOR))
+                bird_list.append(bird_sprites.get_image(frame, bird_width, bird_height, bird_scale, black_color))
 
             while running:
-                screen.fill(BLACK_COLOR)
+                screen.fill(black_color)
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_SPACE and not(game_started):
+                        if event.key == pygame.K_SPACE and not game_started:
                             game_started = True
                             alpha = 0
                             increasing = True
@@ -137,12 +133,15 @@ class Menu:
                     if event.type == pygame.QUIT:
                         running = False
 
-                #check if game is started
+                # check if game is started
                 if game_started:
                     if circles == 0:
-                        increasing, alpha, circles = draw_fade_text("\"The Procrastinators\" presents", PIXEL_50, WHITE_COLOR, 640, 360, 100, increasing, alpha,circles)
+                        increasing, alpha, circles = draw_fade_text("\"The Procrastinators\" presents", pixel_50,
+                                                                    white_color, 640, 360, 100, increasing, alpha,
+                                                                    circles)
                     elif circles == 1:
-                        increasing, alpha, circles = draw_fade_text("Dorock", PIXEL_50, (179, 0, 0), 640, 360, 100, increasing, alpha,circles)
+                        increasing, alpha, circles = draw_fade_text("Dorock", pixel_50, (179, 0, 0), 640, 360, 100,
+                                                                    increasing, alpha, circles)
                     else:
                         screen.blit(bg_img, (0, 0))
                         current_time = pygame.time.get_ticks()
@@ -160,7 +159,7 @@ class Menu:
                         if settings_button.draw(screen, 'hover'):
                             if settings_button_bright.draw(screen) and current_time - started_time > 600:
                                 running = False
-                                settings_menu(current_time, vol, prevol)
+                                settings_menu(current_time, vol)
                             if not settings_hovered:
                                 pygame.mixer.Sound.play(sound_hover)
                                 settings_hovered = True
@@ -179,16 +178,15 @@ class Menu:
                             exit_button.draw(screen)
                             exit_hovered = False
 
-
-                        if turn_on_first_time == False:
+                        if not turn_on_first_time:
                             pygame.mixer.music.unpause()
                             turn_on_first_time = True
                             vol = pygame.mixer.music.get_volume()
 
-                        #update animation
+                        # update animation
 
                         if current_time - last_update >= animation_cd:
-                            if frame == animations-1:
+                            if frame == animations - 1:
                                 frame = 0
                             else:
                                 frame += 1
@@ -198,7 +196,7 @@ class Menu:
                             bird_x -= random.randint(3, 10)
                             screen.blit(bird_list[frame], (bird_x, bird_y))
                         else:
-                            if current_time - last_bird > random.randint(4000,30000):
+                            if current_time - last_bird > random.randint(4000, 30000):
                                 bird_x = 1280
                                 bird_y = random.randint(0, 300)
                                 screen.blit(bird_list[frame], (bird_x, bird_y))
@@ -206,15 +204,16 @@ class Menu:
                                 last_bird = current_time
 
                 else:
-                    increasing, alpha, circles = draw_fade_text("Press SPACE to start the game", PIXEL_50, WHITE_COLOR, 640, 360, 10, increasing, alpha, circles)
+                    increasing, alpha, circles = draw_fade_text("Press SPACE to start the game", pixel_50, white_color,
+                                                                640, 360, 10, increasing, alpha, circles)
                 pygame.display.update()
 
-                clock.tick(FPS)
+                clock.tick(fps)
 
-        def settings_menu(started_time, vol, prevol):
+        def settings_menu(started_time, vol):
             # image stuff for settings menu
             settings_bg = pygame.image.load('Images/settings_bg.png').convert_alpha()
-            settings_bg = pygame.transform.scale(settings_bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
+            settings_bg = pygame.transform.scale(settings_bg, (screen_width, screen_height))
             audio_img = pygame.image.load('Images/audio_sign.png').convert_alpha()
             audio_img_bright = pygame.image.load('Images/audio_bright_sign.png').convert_alpha()
             video_img = pygame.image.load('Images/video_sign.png').convert_alpha()
@@ -222,7 +221,7 @@ class Menu:
             back_img = pygame.image.load('Images/back.png').convert_alpha()
             back_img_bright = pygame.image.load('Images/back_bright.png').convert_alpha()
 
-            #making buttons
+            # making buttons
             audio_button = button.Button(465, 160, audio_img, 0.15)
             audio_button_bright = button.Button(465, 160, audio_img_bright, 0.15)
             video_button = button.Button(465, 340, video_img, 0.15)
@@ -230,15 +229,14 @@ class Menu:
             back_button = button.Button(350, 75, back_img, 0.4)
             back_button_bright = button.Button(350, 75, back_img_bright, 0.4)
 
-            #sounds
+            # sounds
             audio_hovered = False
             video_hovered = False
             back_hovered = False
 
-
             running = True
             while running:
-                screen.fill(BLACK_COLOR)
+                screen.fill(black_color)
                 screen.blit(settings_bg, (0, 0))
                 current_time = pygame.time.get_ticks()
                 for event in pygame.event.get():
@@ -248,12 +246,12 @@ class Menu:
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_ESCAPE:
                             running = False
-                            main_menu(self, True, current_time, vol=vol)
+                            main_menu(True, current_time, vol=vol)
 
                 if audio_button.draw(screen, 'hover'):
                     if audio_button_bright.draw(screen) and current_time - started_time > 600:
                         running = False
-                        audio_menu(current_time, vol, prevol)
+                        audio_menu(current_time, vol)
                     if not audio_hovered:
                         pygame.mixer.Sound.play(sound_hover)
                         audio_hovered = True
@@ -274,7 +272,7 @@ class Menu:
                 if back_button.draw(screen, 'hover'):
                     if back_button_bright.draw(screen) and current_time - started_time > 600:
                         running = False
-                        main_menu(self,True, current_time, vol=vol)
+                        main_menu(True, current_time, vol=vol)
                     if not back_hovered:
                         pygame.mixer.Sound.play(sound_hover)
                         back_hovered = True
@@ -282,39 +280,43 @@ class Menu:
                     back_button.draw(screen)
                     back_hovered = False
 
-
-
                 pygame.display.update()
-                clock.tick(FPS)
+                clock.tick(fps)
 
-        def audio_menu(started_time, vol, prevol):
+        def audio_menu(started_time, vol):
 
-            #images
+            # images
             audio_bg_img = pygame.image.load('Images/AudioMenu/audio_bg.png').convert_alpha()
-            audio_bg = pygame.transform.scale(audio_bg_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
+            audio_bg = pygame.transform.scale(audio_bg_img, (screen_width, screen_height))
 
             music_off_img = pygame.image.load('Images/AudioMenu/music_off.png').convert_alpha()
             music_on_img = pygame.image.load('Images/AudioMenu/music_on.png').convert_alpha()
-            bg_slider = pygame.image.load('Images/AudioMenu/bg_sliderg.png').convert_alpha()
-            bg_slider = pygame.transform.scale(bg_slider, (bg_slider.get_width()*0.4654, bg_slider.get_height()*0.4657))
+            effects_off_img = pygame.image.load('Images/AudioMenu/effects_off.png').convert_alpha()
+            effects_on_img = pygame.image.load('Images/AudioMenu/effects_on.png').convert_alpha()
+            bg_slider = pygame.image.load('Images/AudioMenu/bg_slider.png').convert_alpha()
+            bg_slider = pygame.transform.scale(bg_slider,
+                                               (bg_slider.get_width() * 0.4654, bg_slider.get_height() * 0.4657))
+            back_img = pygame.image.load('Images/back.png').convert_alpha()
+            back_img_bright = pygame.image.load('Images/back_bright.png').convert_alpha()
 
-            #buttons
+            # buttons
             music_on = button.Button(227, 245, music_on_img)
             music_off = button.Button(227, 245, music_off_img)
+            sounds_on = button.Button(227, 347, effects_on_img)
+            sounds_off = button.Button(227, 347, effects_off_img)
+            back_button = button.Button(350, 75, back_img, 0.4)
+            back_button_bright = button.Button(350, 75, back_img_bright, 0.4)
 
             music_hovered = False
             sounds_hovered = False
+            back_hovered = False
 
             # SLIDER
             test_slider = slider.Slider(768, 283, 253, 2, screen, vol)
 
-
-            vol = int(pygame.mixer.music.get_volume() * 1000)
-            prevol = vol
-
             running = True
             while running:
-                screen.fill(BLACK_COLOR)
+                screen.fill(black_color)
                 screen.blit(audio_bg, (0, 0))
                 current_time = pygame.time.get_ticks()
                 for event in pygame.event.get():
@@ -324,14 +326,24 @@ class Menu:
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_ESCAPE:
                             running = False
-                            settings_menu(current_time, vol, prevol)
+                            settings_menu(current_time, vol)
                     if event.type == pygame.MOUSEMOTION:
                         if pygame.mouse.get_pressed()[0] and test_slider.on_slider(pygame.mouse.get_pos()[0],
                                                                                    pygame.mouse.get_pos()[1]):
                             test_slider.handle_event(screen, pygame.mouse.get_pos()[0])
-                            prevol = vol
-                            vol = test_slider.get_volume()
-                            pygame.mixer.music.set_volume(vol / 100)
+                            vol = test_slider.get_volume() / 100
+                            pygame.mixer.music.set_volume(vol)
+
+                if back_button.draw(screen, 'hover'):
+                    if back_button_bright.draw(screen) and current_time - started_time > 600:
+                        running = False
+                        settings_menu(current_time, vol)
+                    if not back_hovered:
+                        pygame.mixer.Sound.play(sound_hover)
+                        back_hovered = True
+                else:
+                    back_button.draw(screen)
+                    back_hovered = False
 
                 if music_off.draw(screen, 'hover'):
                     music_on.draw(screen)
@@ -343,18 +355,28 @@ class Menu:
                     music_hovered = False
                 test_slider.draw(screen, vol)
 
+                if sounds_off.draw(screen, 'hover'):
+                    sounds_on.draw(screen)
+                    if not sounds_hovered:
+                        pygame.mixer.Sound.play(sound_hover)
+                        sounds_hovered = True
+                else:
+                    sounds_off.draw(screen)
+                    sounds_hovered = False
+
                 screen.blit(bg_slider, (729, 257))
 
                 pygame.display.update()
-                clock.tick(FPS)
+                clock.tick(fps)
 
         def video_menu(started_time):
             video_bg_img = pygame.image.load('Images/audio_bg.png').convert_alpha()
-            video_bg = pygame.transform.scale(video_bg_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
+            video_bg = pygame.transform.scale(video_bg_img, (screen_width, screen_height))
 
-        main_menu(self,False, turn_on_first_time=False)
+        main_menu(self, False, turn_on_first_time=False)
 
         pygame.quit()
         sys.exit()
+
 
 Menu()

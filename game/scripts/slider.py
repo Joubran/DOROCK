@@ -2,7 +2,7 @@ import pygame as pg
 
 class Slider:
     def __init__(self, x, y, w, h, screen, vol):
-        self.circle_x = x
+        self.circle_x = x + vol*100*(w/100)
         self.volume = vol
         self.sliderRect = pg.Rect(x, y, w, h)
         self.clicked = False
