@@ -320,7 +320,7 @@ class Menu:
             back_hovered = False
 
             # SLIDER
-            test_slider = slider.Slider(768, 283, 253, 2, screen, vol)
+            test_slider = slider.Slider(772, 283, 253, 2, screen, vol)
 
             running = True
             while running:
