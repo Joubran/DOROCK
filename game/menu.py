@@ -42,6 +42,10 @@ class Menu:
         sound_hover = pygame.mixer.Sound('Sounds/hover_button_sound.ogg')
         sound_hover.set_volume(0.15)
 
+        def draw_text(text, font, text_color, x, y):
+            wtext = font.render(text, False, text_color)
+            screen.blit(wtext, (x, y))
+
         def draw_fade_text(text, font, text_color, x, y, fade_speed=1, increasing=True, alpha=0, circles=0):
             if increasing:
                 alpha += fade_speed
@@ -296,6 +300,9 @@ class Menu:
             bg_slider = pygame.image.load('Images/AudioMenu/bg_slider.png').convert_alpha()
             bg_slider = pygame.transform.scale(bg_slider,
                                                (bg_slider.get_width() * 0.4654, bg_slider.get_height() * 0.4657))
+            sounds_slider = pygame.image.load('Images/AudioMenu/sounds_slider.png').convert_alpha()
+            sounds_slider = pygame.transform.scale(sounds_slider, (sounds_slider.get_width()*0.4654,
+                                                                   sounds_slider.get_height()*0.4657))
             back_img = pygame.image.load('Images/back.png').convert_alpha()
             back_img_bright = pygame.image.load('Images/back_bright.png').convert_alpha()
 
@@ -355,8 +362,13 @@ class Menu:
                     music_hovered = False
                 test_slider.draw(screen, vol)
 
+                svol = sound_hover.get_volume()
                 if sounds_off.draw(screen, 'hover'):
-                    sounds_on.draw(screen)
+                    if sounds_on.draw(screen):
+                        if svol == 0:
+                            sound_hover.set_volume(0.15)
+                        else:
+                            sound_hover.set_volume(0)
                     if not sounds_hovered:
                         pygame.mixer.Sound.play(sound_hover)
                         sounds_hovered = True
@@ -364,7 +376,15 @@ class Menu:
                     sounds_off.draw(screen)
                     sounds_hovered = False
 
+                if svol == 0:
+                    draw_text('OFF', pixel_50, (44, 27, 9), 856, 356)
+                else:
+                    draw_text('ON', pixel_50, (44, 27, 9), 868, 356)
+
+
                 screen.blit(bg_slider, (729, 257))
+                screen.blit(sounds_slider, (727, 362))
+
 
                 pygame.display.update()
                 clock.tick(fps)
