@@ -151,7 +151,7 @@ class Menu:
                         current_time = pygame.time.get_ticks()
                         if start_button.draw(screen, 'hover'):
                             if start_button_bright.draw(screen) and current_time - started_time > 600:
-                                svol = 1 if (sound_hover.get_volume()>0) else 0
+                                svol = 1 if (sound_hover.get_volume() > 0) else 0
                                 game.Game(self, svol, vol).run()
                                 running = False
                             if not start_hovered:
@@ -382,11 +382,9 @@ class Menu:
                 else:
                     draw_text('ON', pixel_50, (44, 27, 9), 868, 356)
 
-
                 screen.blit(bg_slider, (729, 257))
                 screen.blit(sounds_slider, (727, 362))
-
-
+                
                 pygame.display.update()
                 clock.tick(fps)
 

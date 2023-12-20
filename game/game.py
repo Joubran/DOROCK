@@ -18,6 +18,7 @@ from scripts.pyvidplayer import Video
 
 LEVEL_TEXTS = ["Anastasia's Heavens", "Baldan's Mountains", "Timur's City", "Sofie's Cave", "Joubran's Hell", "THE DOROCK DUNGEON"]
 
+
 class Game:
     def __init__(self, menu, svol, vol):
         pygame.init()
