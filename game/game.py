@@ -105,6 +105,8 @@ class Game:
             'explosion': pygame.mixer.Sound('data/sfx/explosion.wav')
         }   
 
+        self.volume = vol
+
         if svol == 1:
             self.sfx['ambience'].set_volume(0)
             self.sfx['shoot'].set_volume(0.4)
@@ -152,7 +154,7 @@ class Game:
     def load_level(self, map_id):
         if self.current_music != self.level:
             pygame.mixer.music.load('data/music/' + str(self.level) + '.mp3')
-            pygame.mixer.music.set_volume(1)
+            pygame.mixer.music.set_volume(self.volume)
             #pygame.mixer.music.play(-1)
             self.current_music = self.level
 
